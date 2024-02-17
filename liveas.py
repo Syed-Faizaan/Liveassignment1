@@ -1,31 +1,36 @@
 import requests
+from datetime import datetime, timedelta
 
-def get_latest_commit(username, repository):
+def get_new_commits(username, repository, token, since):
     url = f'https://api.github.com/repos/{username}/{repository}/commits'
-    response = requests.get(url)
+    headers = {'Authorization': f'token {token}'}
+    params = {'since': since}
+
+    response = requests.get(url, headers=headers, params=params)
 
     if response.status_code == 200:
         commits = response.json()
-        if commits:
-            latest_commit = commits[0]['sha']
-            return latest_commit
-        else:
-            return None
+        return commits
     else:
-        print(f"Error: Unable to fetch commits. Status Code: {response.status_code}")
+        print(f"Failed to fetch commits. Status code: {response.status_code}")
         return None
 
 def main():
-    # Replace these values with your GitHub username and repository name
-    github_username = 'your_username'
-    github_repository = 'your_repository'
+    username = 'Syed-Faizaan'
+    repository = 'Live-HEROVIRED-assignment'
+    token = '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'
+    # Set the datetime for the last check (e.g., one day ago)
+    since_datetime = (datetime.now() - timedelta(hours=48)).isoformat()
 
-    latest_commit = get_latest_commit(github_username, github_repository)
+    commits = get_new_commits(username, repository, token, since_datetime)
+    
+    if commits:
+        print(f"New commits in {username}/{repository}:")
+        for commit in commits:
+            print(f"Commit: {commit['sha'][:7]} by {commit['commit']['author']['name']}: {commit['commit']['message']}")
+            
+        else:
+            print("No new commits.")
 
-    if latest_commit:
-        print(f"Latest commit in {github_repository}: {latest_commit}")
-    else:
-        print("Unable to fetch latest commit.")
-
-if __name__ == "__main__":
+if name == "__main__":
     main()
