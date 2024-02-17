@@ -17,7 +17,7 @@ def get_new_commits(username, repository, token, since):
 
 def main():
     username = 'Syed-Faizaan'
-    repository = 'Live-HEROVIRED-assignment'
+    repository = 'Liveassignment1'
     token = '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'
     # Set the datetime for the last check (e.g., one day ago)
     since_datetime = (datetime.now() - timedelta(hours=48)).isoformat()
