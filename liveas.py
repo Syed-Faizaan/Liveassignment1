@@ -23,7 +23,7 @@ def get_new_commits(repo_owner, repo_name, last_commit_sha=None):
 def main():
     # GitHub repository details
     repo_owner = 'Syed-Faizaan'
-    repo_name = '-Project-1-CI-CD-Pipeline'
+    repo_name = 'SDLC-Project-1-CI-CD-Pipeline'
     
     # Optional: Last commit SHA to start checking from
     last_commit_sha = None  # Provide the last commit SHA if needed
