@@ -1,36 +1,43 @@
 import requests
-from datetime import datetime, timedelta
 
-def get_new_commits(username, repository, token, since):
-    url = f'https://api.github.com/repos/{username}/{repository}/commits'
-    headers = {'Authorization': f'token {token}'}
-    params = {'since': since}
-
-    response = requests.get(url, headers=headers, params=params)
-
+def get_new_commits(repo_owner, repo_name, last_commit_sha=None):
+    # GitHub API endpoint to list commits
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/commits"
+    
+    # Parameters to pass to the API
+    params = {}
+    if last_commit_sha:
+        params['since'] = last_commit_sha
+    
+    # Send GET request to the GitHub API
+    response = requests.get(url, params=params)
+    
+    # Check if request was successful
     if response.status_code == 200:
         commits = response.json()
         return commits
     else:
-        print(f"Failed to fetch commits. Status code: {response.status_code}")
+        print(f"Failed to fetch commits: {response.status_code}")
         return None
 
 def main():
-    username = 'Syed-Faizaan'
-    repository = 'SDLC-Project-1-CI-CD-Pipeline'
-    token = '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'
-    # Set the datetime for the last check (e.g., one day ago)
-    since_datetime = (datetime.now() - timedelta(hours=48)).isoformat()
-
-    commits = get_new_commits(username, repository, token, since_datetime)
+    # GitHub repository details
+    repo_owner = 'Syed-Faizaan'
+    repo_name = '-Project-1-CI-CD-Pipeline'
     
+    # Optional: Last commit SHA to start checking from
+    last_commit_sha = None  # Provide the last commit SHA if needed
+    
+    # Fetch new commits
+    commits = get_new_commits(repo_owner, repo_name, last_commit_sha)
+    
+    # Print new commits
     if commits:
-        print(f"New commits in {username}/{repository}:")
+        print(f"New commits in {repo_owner}/{repo_name}:")
         for commit in commits:
-            print(f"Commit: {commit['sha'][:7]} by {commit['commit']['author']['name']}: {commit['commit']['message']}")
-            
-        else:
-            print("No new commits.")
+            print(f"- {commit['commit']['message']}")
+    else:
+        print("No new commits found.")
 
-if name == "__main__":
+if __name__ == "_main_":
     main()
